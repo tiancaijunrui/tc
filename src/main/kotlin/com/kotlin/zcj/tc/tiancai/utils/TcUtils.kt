@@ -5,7 +5,7 @@ import java.util.*
 /**
  * @Since2017/12/9 ZhaCongJie@HF
  */
-object ScUtils {
+object TcUtils {
     fun genUUID(): String {
         return UUID.randomUUID().toString().replace("-", "");
     }

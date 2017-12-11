@@ -1,5 +1,6 @@
 package com.kotlin.zcj.tc.tiancai.service
 
+import com.kotlin.zcj.tc.data.tables.records.TTcUserRecord
 import com.kotlin.zcj.tc.tiancai.entity.User
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -10,5 +11,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 interface UserService {
     @Transactional
-    fun save(user : User);
+    fun save(user: User);
+
+    fun load(userId: String): TTcUserRecord;
 }

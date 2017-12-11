@@ -8,7 +8,7 @@ import org.junit.Test
 class Test1 {
     @Test
     fun testUUID() {
-        val id = ScUtils.genUUID()
+        val id = TcUtils.genUUID()
         println(id);
 
     }

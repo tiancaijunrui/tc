@@ -1,4 +1,4 @@
-DROP TABLE t_tc_user;
+DROP TABLE IF EXISTS  t_tc_user ;
 CREATE TABLE t_tc_user (
   user_id VARCHAR (32) PRIMARY KEY,
   login_name VARCHAR (30) NOT NULL UNIQUE,
