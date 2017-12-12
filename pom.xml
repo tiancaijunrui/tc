@@ -141,6 +141,35 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <!--<version>1.5</version>-->
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>create-database-h2</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <driver>${spring.datasource.druid.driver-class-name}</driver>
+                            <url>${spring.datasource.druid.url}</url>
+                            <username>${spring.datasource.druid.username}</username>
+                            <password>${spring.datasource.druid.password}</password>
+
+                            <autocommit>true</autocommit>
+                            <srcFiles>
+                                <srcFile>src/main/resources/init_sql/tc_db.sql</srcFile>
+                                <srcFile>src/main/resources/init_sql/tc_init.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <!-- Specify the maven code generator plugin -->
@@ -155,7 +184,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <!-- Manage the plugin's dependency. In this example, we'll use a PostgreSQL database -->
                 <dependencies>
                     <dependency>
                         <groupId>org.postgresql</groupId>
@@ -197,5 +225,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
