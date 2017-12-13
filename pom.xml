@@ -28,14 +28,23 @@
     </properties>
 
     <dependencies>
+        <!--spring start-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jooq</artifactId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!--spring end-->
+        <!--kotlin start-->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jre8</artifactId>
@@ -46,16 +55,23 @@
             <artifactId>kotlin-reflect</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
-
+        <!--kotlin end-->
+        <!--postgresql 数据库配置 start-->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!--postgresql 数据库配置 end-->
+        <!--jooq orm,数据库池druid 配置 start-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <artifactId>spring-boot-starter-jooq</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-meta</artifactId>
+            <version>3.10.0</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -67,17 +83,21 @@
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>${druid.version}</version>
         </dependency>
+        <!--jooq orm 配置 end-->
+        <!--热加载 end-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
+            <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
+        <!--热加载 end-->
+        <!--redis 配置start-->
         <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq-meta</artifactId>
-            <version>3.10.0</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <!--<version>1.5.9.RELEASE</version>-->
         </dependency>
-
+        <!--redis 配置end-->
     </dependencies>
 
     <build>
@@ -87,6 +107,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <fork>true</fork>
+                </configuration>
             </plugin>
             <plugin>
                 <artifactId>kotlin-maven-plugin</artifactId>
@@ -122,7 +145,6 @@
                     </dependency>
                 </dependencies>
             </plugin>
-
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>properties-maven-plugin</artifactId>
@@ -170,7 +192,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <!-- Specify the maven code generator plugin -->
                 <groupId>org.jooq</groupId>
