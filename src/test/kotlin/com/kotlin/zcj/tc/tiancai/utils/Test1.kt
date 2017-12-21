@@ -8,8 +8,16 @@ import org.junit.Test
 class Test1 {
     @Test
     fun testUUID() {
-        val id = TcUtils.genUUID()
-        println(id);
+        for(i in 1..10){
+            val id = TcUtils.genUUID()
+            println(id);
+        }
 
+
+    }
+
+    @Test
+    fun testToken(){
+//        println(TcUtils.getToken("adfadfsdf",Date()));
     }
 }

@@ -21,12 +21,12 @@ class IndexController {
     @Resource
     lateinit private var stringRedis: StringRedisTemplate;
 
-    @RequestMapping("/index")
+    @RequestMapping("/index.html")
     @ResponseBody
     fun index(): ModelAndView {
-        val user: TTcUserRecord = userService.load("86e61c732d4242aaadebab031a600191");
-        stringRedis.opsForValue().set(user.userId, user.toString());
-        println(stringRedis.opsForValue().get(user.userId));
+//        val user: TTcUserRecord = userService.load("86e61c732d4242aaadebab031a600191");
+//        stringRedis.opsForValue().set(user.userId, user.toString());
+//        println(stringRedis.opsForValue().get(user.userId));
         return ModelAndView("index");
     }
 
