@@ -4,9 +4,9 @@
 <head>
     <title>${title!"tc"}</title>
     <meta charset="utf-8">
-    <script src="/js/jquery-3.2.1.min.js"></script>
-    <script src="/js/bootstrap.js"></script>
-    <style rel="stylesheet" href="/css/bootstrap.css"></style>
+    <script src="/other/jquery-3.2.1.min.js"></script>
+    <script src="/layui/layui.js"></script>
+    <style rel="stylesheet" href="/layui/css/layui.css"></style>
 </head>
 <body>
     <#nested>

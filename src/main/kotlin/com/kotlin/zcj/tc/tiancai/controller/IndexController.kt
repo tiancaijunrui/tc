@@ -37,14 +37,14 @@ class IndexController {
     @ResponseBody
     fun index(request: HttpServletRequest, response: HttpServletResponse): ModelAndView? {
         val aliMap = getUserFromAli(request)
-        var user : TTcUserRecord? = TTcUserRecord();
+        var user: TTcUserRecord? = TTcUserRecord();
         val aliUserId: String? = aliMap["user_id"]
-        if (aliUserId == null){
+        if (aliUserId == null) {
             response.sendRedirect("/login/auth.html");
             return null;
         }
         user = userService.getUserByAliUserId(aliUserId)
-        if ( user == null || StringUtils.isEmpty(user.userId)) {
+        if (user == null || StringUtils.isEmpty(user.userId)) {
             user = TTcUserRecord()
             user.userId = request.getParameter("state")
             user.aliUserId = aliMap["user_id"]
