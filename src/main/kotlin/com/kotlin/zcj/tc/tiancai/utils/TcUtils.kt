@@ -1,5 +1,6 @@
 package com.kotlin.zcj.tc.tiancai.utils
 
+import com.alibaba.fastjson.JSON
 import com.auth0.jwt.internal.org.apache.commons.lang3.StringUtils
 import com.kotlin.zcj.tc.tiancai.entity.User
 import java.util.*
@@ -13,11 +14,6 @@ object TcUtils {
     private var TTLMillis: Long = 60 * 60 * 1000L;
     fun genUUID(): String {
         return UUID.randomUUID().toString().replace("-", "");
-    }
-
-    fun getToken(user: User): String? {
-//        var sign
-        return null;
     }
 
     fun getIP(request: HttpServletRequest): String? {
@@ -35,5 +31,11 @@ object TcUtils {
             return ip;
         }
         return request.remoteAddr;
+    }
+
+    fun getUserByJson(jsonBody: String): Map<String,String> {
+        val map = JSON.parse(jsonBody) as Map<*, *>;
+        val dataMap = map["alipay_user_info_share_response"] as Map<*, *>;
+        return dataMap as Map<String, String>;
     }
 }

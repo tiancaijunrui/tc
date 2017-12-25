@@ -23,15 +23,16 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TTcUser implements Serializable {
 
-    private static final long serialVersionUID = 166902304;
+    private static final long serialVersionUID = 938076230;
 
     private String    userId;
-    private String    loginName;
-    private String    password;
+    private String    aliUserId;
+    private String    nickName;
     private String    email;
     private String    phone;
     private Integer   age;
     private Timestamp birthday;
+    private String    avatar;
     private String    createBy;
     private Timestamp createTime;
     private String    updateBy;
@@ -41,12 +42,13 @@ public class TTcUser implements Serializable {
 
     public TTcUser(TTcUser value) {
         this.userId = value.userId;
-        this.loginName = value.loginName;
-        this.password = value.password;
+        this.aliUserId = value.aliUserId;
+        this.nickName = value.nickName;
         this.email = value.email;
         this.phone = value.phone;
         this.age = value.age;
         this.birthday = value.birthday;
+        this.avatar = value.avatar;
         this.createBy = value.createBy;
         this.createTime = value.createTime;
         this.updateBy = value.updateBy;
@@ -55,24 +57,26 @@ public class TTcUser implements Serializable {
 
     public TTcUser(
         String    userId,
-        String    loginName,
-        String    password,
+        String    aliUserId,
+        String    nickName,
         String    email,
         String    phone,
         Integer   age,
         Timestamp birthday,
+        String    avatar,
         String    createBy,
         Timestamp createTime,
         String    updateBy,
         Timestamp updateTime
     ) {
         this.userId = userId;
-        this.loginName = loginName;
-        this.password = password;
+        this.aliUserId = aliUserId;
+        this.nickName = nickName;
         this.email = email;
         this.phone = phone;
         this.age = age;
         this.birthday = birthday;
+        this.avatar = avatar;
         this.createBy = createBy;
         this.createTime = createTime;
         this.updateBy = updateBy;
@@ -87,20 +91,20 @@ public class TTcUser implements Serializable {
         this.userId = userId;
     }
 
-    public String getLoginName() {
-        return this.loginName;
+    public String getAliUserId() {
+        return this.aliUserId;
     }
 
-    public void setLoginName(String loginName) {
-        this.loginName = loginName;
+    public void setAliUserId(String aliUserId) {
+        this.aliUserId = aliUserId;
     }
 
-    public String getPassword() {
-        return this.password;
+    public String getNickName() {
+        return this.nickName;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public String getEmail() {
@@ -133,6 +137,14 @@ public class TTcUser implements Serializable {
 
     public void setBirthday(Timestamp birthday) {
         this.birthday = birthday;
+    }
+
+    public String getAvatar() {
+        return this.avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getCreateBy() {
@@ -172,12 +184,13 @@ public class TTcUser implements Serializable {
         StringBuilder sb = new StringBuilder("TTcUser (");
 
         sb.append(userId);
-        sb.append(", ").append(loginName);
-        sb.append(", ").append(password);
+        sb.append(", ").append(aliUserId);
+        sb.append(", ").append(nickName);
         sb.append(", ").append(email);
         sb.append(", ").append(phone);
         sb.append(", ").append(age);
         sb.append(", ").append(birthday);
+        sb.append(", ").append(avatar);
         sb.append(", ").append(createBy);
         sb.append(", ").append(createTime);
         sb.append(", ").append(updateBy);

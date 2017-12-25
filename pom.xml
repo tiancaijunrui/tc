@@ -123,6 +123,11 @@
             <artifactId>jaxen</artifactId>
             <version>1.1.6</version>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.41</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -242,10 +247,10 @@
                 <configuration>
                     <!-- JDBC connection parameters -->
                     <jdbc>
-                        <driver>${spring.datasource.driverClassName}</driver>
-                        <url>${spring.datasource.url}</url>
-                        <user>${spring.datasource.username}</user>
-                        <password>${spring.datasource.password}</password>
+                        <driver>org.postgresql.Driver</driver>
+                        <url>jdbc:postgresql://127.0.0.1:5432/postgres</url>
+                        <user>postgres</user>
+                        <password>zcj19921123</password>
                     </jdbc>
 
                     <!-- Generator parameters -->
@@ -267,6 +272,14 @@
                             <pojos>true</pojos>
                         </generate>
                     </generator>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <skipTests>true</skipTests>
                 </configuration>
             </plugin>
         </plugins>

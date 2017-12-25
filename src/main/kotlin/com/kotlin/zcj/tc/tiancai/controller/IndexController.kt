@@ -1,24 +1,25 @@
 package com.kotlin.zcj.tc.tiancai.controller
 
+import com.alipay.api.AlipayApiException
+import com.alipay.api.DefaultAlipayClient
+import com.alipay.api.request.AlipaySystemOauthTokenRequest
+import com.alipay.api.request.AlipayUserInfoShareRequest
 import com.kotlin.zcj.tc.data.tables.records.TTcUserRecord
+import com.kotlin.zcj.tc.tiancai.alipay.config.AlipayConfig
 import com.kotlin.zcj.tc.tiancai.service.UserService
+import com.kotlin.zcj.tc.tiancai.utils.TcUtils
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.util.Assert
+import org.springframework.util.CollectionUtils
+import org.springframework.util.StringUtils
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.servlet.ModelAndView
 import javax.annotation.Resource
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import com.alipay.api.AlipayApiException
-import com.alipay.api.response.AlipaySystemOauthTokenResponse
-import com.alipay.api.request.AlipaySystemOauthTokenRequest
-import com.alipay.api.AlipayConstants.APP_ID
-import com.alipay.api.DefaultAlipayClient
-import com.alipay.api.AlipayClient
-import com.kotlin.zcj.tc.tiancai.alipay.config.AlipayConfig
-import com.kotlin.zcj.tc.tiancai.utils.TcConstants
+import kotlin.reflect.jvm.internal.impl.platform.MappingUtilKt
 
 
 /**
@@ -34,30 +35,48 @@ class IndexController {
 
     @RequestMapping("/index.html")
     @ResponseBody
-    fun index(request: HttpServletRequest, response: HttpServletResponse): ModelAndView {
-//        val user: TTcUserRecord = userService.load("86e61c732d4242aaadebab031a600191");
-//        stringRedis.opsForValue().set(user.userId, user.toString());
-//        println(stringRedis.opsForValue().get(user.userId));
-        val authCode = request.getParameter("auth_code");
-        val scope = request.getParameter("scope");
-        val alipayClient = DefaultAlipayClient("https://openapi.alipay.com/gateway.do",AlipayConfig.appId, AlipayConfig.aesKey
-        ,"json",AlipayConfig.input_charset,AlipayConfig.publicKey,"RSA2")
+    fun index(request: HttpServletRequest, response: HttpServletResponse): ModelAndView? {
+        val aliMap = getUserFromAli(request)
+        var user : TTcUserRecord? = TTcUserRecord();
+        val aliUserId: String? = aliMap["user_id"]
+        if (aliUserId == null){
+            response.sendRedirect("/login/auth.html");
+            return null;
+        }
+        user = userService.getUserByAliUserId(aliUserId)
+        if ( user == null || StringUtils.isEmpty(user.userId)) {
+            user = TTcUserRecord()
+            user.userId = request.getParameter("state")
+            user.aliUserId = aliMap["user_id"]
+            user.nickName = aliMap["nick_name"]
+            user.avatar = aliMap["avatar"]
+            userService.save(user);
+        }
+        request.setAttribute("user", user)
+        return ModelAndView("index");
+    }
+
+    private fun getUserFromAli(request: HttpServletRequest): Map<String, String> {
+        val authCode = request.getParameter("auth_code")
+        val aliPayClient = DefaultAlipayClient("https://openapi.alipay.com/gateway.do", AlipayConfig.appId, AlipayConfig.secretKey
+                , "json", AlipayConfig.input_charset, AlipayConfig.publicKey, "RSA2")
         val aliRequest = AlipaySystemOauthTokenRequest()
         aliRequest.code = authCode
         aliRequest.grantType = "authorization_code"
-        try {
-            val aliResponse = alipayClient.execute(aliRequest)
-            if(aliResponse.isSuccess){
-                System.out.println("调用成功");
-            } else {
-                System.out.println("调用失败");
+        val aliResponse = aliPayClient.execute(aliRequest)
+        if (aliResponse.isSuccess) {
+            System.out.println("调用成功");
+            val aliRequestTwo = AlipayUserInfoShareRequest()
+            val auth_token = aliResponse.accessToken
+            try {
+                val userinfoShareResponse = aliPayClient.execute(aliRequestTwo, auth_token)
+                return TcUtils.getUserByJson(userinfoShareResponse.body)
+            } catch (e: AlipayApiException) {
+                //处理异常
+                e.printStackTrace()
             }
-        } catch (e: AlipayApiException) {
-            //处理异常
-            e.printStackTrace()
         }
-
-        return ModelAndView("index");
+        return HashMap<String, String>(0);
     }
 
 }

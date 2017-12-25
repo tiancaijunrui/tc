@@ -37,7 +37,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<TTcUserRecord> T_TC_USER_PKEY = UniqueKeys0.T_TC_USER_PKEY;
-    public static final UniqueKey<TTcUserRecord> T_TC_USER_LOGIN_NAME_KEY = UniqueKeys0.T_TC_USER_LOGIN_NAME_KEY;
+    public static final UniqueKey<TTcUserRecord> T_TC_USER_ALI_USER_ID_KEY = UniqueKeys0.T_TC_USER_ALI_USER_ID_KEY;
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
@@ -50,6 +50,6 @@ public class Keys {
 
     private static class UniqueKeys0 extends AbstractKeys {
         public static final UniqueKey<TTcUserRecord> T_TC_USER_PKEY = createUniqueKey(TTcUser.T_TC_USER, "t_tc_user_pkey", TTcUser.T_TC_USER.USER_ID);
-        public static final UniqueKey<TTcUserRecord> T_TC_USER_LOGIN_NAME_KEY = createUniqueKey(TTcUser.T_TC_USER, "t_tc_user_login_name_key", TTcUser.T_TC_USER.LOGIN_NAME);
+        public static final UniqueKey<TTcUserRecord> T_TC_USER_ALI_USER_ID_KEY = createUniqueKey(TTcUser.T_TC_USER, "t_tc_user_ali_user_id_key", TTcUser.T_TC_USER.ALI_USER_ID);
     }
 }

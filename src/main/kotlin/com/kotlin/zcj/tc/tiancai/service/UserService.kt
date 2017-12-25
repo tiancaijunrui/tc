@@ -10,8 +10,9 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Service
 interface UserService {
-    @Transactional
-    fun save(user: User);
+    fun save(user: TTcUserRecord);
 
     fun load(userId: String): TTcUserRecord;
+
+    fun getUserByAliUserId(aliUserId: String): TTcUserRecord?;
 }

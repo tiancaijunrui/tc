@@ -35,7 +35,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TTcUser extends TableImpl<TTcUserRecord> {
 
-    private static final long serialVersionUID = -1394678663;
+    private static final long serialVersionUID = 1174128190;
 
     /**
      * The reference instance of <code>public.t_tc_user</code>
@@ -56,14 +56,14 @@ public class TTcUser extends TableImpl<TTcUserRecord> {
     public final TableField<TTcUserRecord, String> USER_ID = createField("user_id", org.jooq.impl.SQLDataType.VARCHAR.length(32).nullable(false), this, "");
 
     /**
-     * The column <code>public.t_tc_user.login_name</code>.
+     * The column <code>public.t_tc_user.ali_user_id</code>.
      */
-    public final TableField<TTcUserRecord, String> LOGIN_NAME = createField("login_name", org.jooq.impl.SQLDataType.VARCHAR.length(30).nullable(false), this, "");
+    public final TableField<TTcUserRecord, String> ALI_USER_ID = createField("ali_user_id", org.jooq.impl.SQLDataType.VARCHAR.length(30).nullable(false), this, "");
 
     /**
-     * The column <code>public.t_tc_user.password</code>.
+     * The column <code>public.t_tc_user.nick_name</code>.
      */
-    public final TableField<TTcUserRecord, String> PASSWORD = createField("password", org.jooq.impl.SQLDataType.VARCHAR.length(50).nullable(false), this, "");
+    public final TableField<TTcUserRecord, String> NICK_NAME = createField("nick_name", org.jooq.impl.SQLDataType.VARCHAR.length(50), this, "");
 
     /**
      * The column <code>public.t_tc_user.email</code>.
@@ -84,6 +84,11 @@ public class TTcUser extends TableImpl<TTcUserRecord> {
      * The column <code>public.t_tc_user.birthday</code>.
      */
     public final TableField<TTcUserRecord, Timestamp> BIRTHDAY = createField("birthday", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
+
+    /**
+     * The column <code>public.t_tc_user.avatar</code>.
+     */
+    public final TableField<TTcUserRecord, String> AVATAR = createField("avatar", org.jooq.impl.SQLDataType.VARCHAR.length(1000), this, "");
 
     /**
      * The column <code>public.t_tc_user.create_by</code>.
@@ -148,7 +153,7 @@ public class TTcUser extends TableImpl<TTcUserRecord> {
      */
     @Override
     public List<UniqueKey<TTcUserRecord>> getKeys() {
-        return Arrays.<UniqueKey<TTcUserRecord>>asList(Keys.T_TC_USER_PKEY, Keys.T_TC_USER_LOGIN_NAME_KEY);
+        return Arrays.<UniqueKey<TTcUserRecord>>asList(Keys.T_TC_USER_PKEY, Keys.T_TC_USER_ALI_USER_ID_KEY);
     }
 
     /**
