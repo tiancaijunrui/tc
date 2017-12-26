@@ -1,10 +1,12 @@
 package com.kotlin.zcj.tc.tiancai.filter
 
 import com.kotlin.zcj.tc.tiancai.service.UserService
+import com.kotlin.zcj.tc.tiancai.utils.TcConstants
 import com.kotlin.zcj.tc.tiancai.utils.TcUtils
 import org.apache.catalina.connector.RequestFacade
 import org.springframework.core.annotation.Order
 import org.springframework.data.redis.core.StringRedisTemplate
+import org.springframework.util.StringUtils
 import org.springframework.web.context.support.WebApplicationContextUtils
 import java.util.concurrent.TimeUnit
 import javax.annotation.Resource
@@ -36,13 +38,23 @@ class LoginFilter : Filter {
             chain!!.doFilter(request, response);
             return;
         }
-        val sessionId = request.getParameter("sessionId")
-        val token = stringRedis.opsForValue().get(sessionId)
-        val sign = TcUtils.validateToken(request, token, userService.getTokenVersion());
+        val sessionId : String? = request.getParameter("sessionId")
+        if (StringUtils.isEmpty(sessionId)){
+            response.sendRedirect(authUrl)
+            return
+        }
+        val token: String? = stringRedis.opsForValue().get(sessionId)
+        if (StringUtils.isEmpty(token)) {
+            response.sendRedirect(authUrl)
+            return
+        }
+        val sign = TcUtils.validateToken(request, token!!, userService.getTokenVersion())
         if (sign) {
             val newToken: String = request.getAttribute("sessionId") as String
             stringRedis.opsForValue().getAndSet(sessionId, newToken)
-            stringRedis.expire(sessionId, 60 * 60, TimeUnit.MILLISECONDS)
+            stringRedis.expire(sessionId, 60 * 60 * 1000, TimeUnit.MILLISECONDS)
+            request.setAttribute("sessionId", sessionId)
+            request.setAttribute("userId", TcUtils.parseJWt(token.substring(TcConstants.pre_token.length))["userId"] as String)
             chain!!.doFilter(request, response);
         } else {
             response.sendRedirect(authUrl)

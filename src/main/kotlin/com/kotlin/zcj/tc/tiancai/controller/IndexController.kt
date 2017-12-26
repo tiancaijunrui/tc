@@ -11,11 +11,14 @@ import com.kotlin.zcj.tc.tiancai.utils.TcConstants
 import com.kotlin.zcj.tc.tiancai.utils.TcUtils
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Controller
+import org.springframework.util.CollectionUtils
 import org.springframework.util.StringUtils
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.servlet.ModelAndView
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.annotation.Resource
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -54,9 +57,15 @@ class IndexController {
 
         request.setAttribute("user", user)
         val token = TcUtils.getToken(user, TcUtils.getIP(request), userService.getTokenVersion())
-        val sessionId = TcUtils.genUUID()
+        val sessionId = user.userId + TcUtils.genUUID()
+        val keys: Set<String>? = stringRedis.keys(user.userId + "*")
+        if (!CollectionUtils.isEmpty(keys)) {
+            for (key in keys!!) {
+                stringRedis.delete(key)
+            }
+        }
         stringRedis.opsForValue().set(sessionId, TcConstants.pre_token + token)
-        stringRedis.expireAt(sessionId, TcUtils.getEndTimeOfDate(Date()))
+        stringRedis.expire(sessionId, 60 * 60 * 1000, TimeUnit.MILLISECONDS)
         request.setAttribute("sessionId", sessionId);
         return ModelAndView("index")
     }
@@ -84,10 +93,12 @@ class IndexController {
         return HashMap<String, String>(0);
     }
 
-    @RequestMapping("/test.html")
+    @RequestMapping("/myConsole/{userId}.html")
     @ResponseBody
-    fun test(request: HttpServletRequest, response: HttpServletResponse): ModelAndView {
-        return ModelAndView("index");
+    fun test(request: HttpServletRequest, response: HttpServletResponse, @PathVariable("userId") userId: String): ModelAndView {
+        val user = userService.load(userId)
+        request.setAttribute("user",user);
+        return ModelAndView("console");
     }
 
 }
