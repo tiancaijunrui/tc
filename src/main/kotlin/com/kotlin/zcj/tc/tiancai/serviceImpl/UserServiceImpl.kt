@@ -6,6 +6,7 @@ import com.kotlin.zcj.tc.tiancai.entity.User
 import com.kotlin.zcj.tc.tiancai.service.UserService
 import com.kotlin.zcj.tc.tiancai.utils.TcUtils
 import org.jooq.DSLContext
+import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.sql.Timestamp
@@ -18,8 +19,23 @@ import javax.annotation.Resource
  */
 @Service("userService")
 class UserServiceImpl : UserService {
+    private var token_version_key_pre = "token_version_key";
+
+    override fun getTokenVersion(): String {
+        if (stringRedis.hasKey(token_version_key_pre)) {
+            return stringRedis.opsForValue().get(token_version_key_pre)
+        }
+        val version = TcUtils.genUUID();
+        stringRedis.opsForValue().set(token_version_key_pre, version);
+        stringRedis.expireAt(token_version_key_pre, TcUtils.getEndTimeOfDate(Date()))
+        return version;
+    }
+
     @Resource
     var dsl: DSLContext? = null
+
+    @Resource
+    lateinit private var stringRedis: StringRedisTemplate;
 
 
     @Transactional

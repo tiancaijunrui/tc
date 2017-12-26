@@ -15,4 +15,6 @@ interface UserService {
     fun load(userId: String): TTcUserRecord;
 
     fun getUserByAliUserId(aliUserId: String): TTcUserRecord?;
+
+    fun getTokenVersion(): String;
 }

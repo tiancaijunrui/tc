@@ -11,5 +11,6 @@ object TcConstants {
     val scope : String = "auth_user";
     val redirect_uri : String = encode("http://127.0.0.1:8081/index/index.html");
     val status_success = "Success";
+    val pre_token = "TIANCAI";
 
 }

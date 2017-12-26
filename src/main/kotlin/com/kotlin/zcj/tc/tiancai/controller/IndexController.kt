@@ -7,19 +7,18 @@ import com.alipay.api.request.AlipayUserInfoShareRequest
 import com.kotlin.zcj.tc.data.tables.records.TTcUserRecord
 import com.kotlin.zcj.tc.tiancai.alipay.config.AlipayConfig
 import com.kotlin.zcj.tc.tiancai.service.UserService
+import com.kotlin.zcj.tc.tiancai.utils.TcConstants
 import com.kotlin.zcj.tc.tiancai.utils.TcUtils
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Controller
-import org.springframework.util.Assert
-import org.springframework.util.CollectionUtils
 import org.springframework.util.StringUtils
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.servlet.ModelAndView
+import java.util.*
 import javax.annotation.Resource
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import kotlin.reflect.jvm.internal.impl.platform.MappingUtilKt
 
 
 /**
@@ -52,8 +51,14 @@ class IndexController {
             user.avatar = aliMap["avatar"]
             userService.save(user);
         }
+
         request.setAttribute("user", user)
-        return ModelAndView("index");
+        val token = TcUtils.getToken(user, TcUtils.getIP(request), userService.getTokenVersion())
+        val sessionId = TcUtils.genUUID()
+        stringRedis.opsForValue().set(sessionId, TcConstants.pre_token + token)
+        stringRedis.expireAt(sessionId, TcUtils.getEndTimeOfDate(Date()))
+        request.setAttribute("sessionId", sessionId);
+        return ModelAndView("index")
     }
 
     private fun getUserFromAli(request: HttpServletRequest): Map<String, String> {
@@ -77,6 +82,12 @@ class IndexController {
             }
         }
         return HashMap<String, String>(0);
+    }
+
+    @RequestMapping("/test.html")
+    @ResponseBody
+    fun test(request: HttpServletRequest, response: HttpServletResponse): ModelAndView {
+        return ModelAndView("index");
     }
 
 }
