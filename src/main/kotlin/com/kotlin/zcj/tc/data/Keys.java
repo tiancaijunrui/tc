@@ -4,7 +4,9 @@
 package com.kotlin.zcj.tc.data;
 
 
+import com.kotlin.zcj.tc.data.tables.TTcAccount;
 import com.kotlin.zcj.tc.data.tables.TTcUser;
+import com.kotlin.zcj.tc.data.tables.records.TTcAccountRecord;
 import com.kotlin.zcj.tc.data.tables.records.TTcUserRecord;
 
 import javax.annotation.Generated;
@@ -36,6 +38,7 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<TTcAccountRecord> T_TC_ACCOUNT_PKEY = UniqueKeys0.T_TC_ACCOUNT_PKEY;
     public static final UniqueKey<TTcUserRecord> T_TC_USER_PKEY = UniqueKeys0.T_TC_USER_PKEY;
     public static final UniqueKey<TTcUserRecord> T_TC_USER_ALI_USER_ID_KEY = UniqueKeys0.T_TC_USER_ALI_USER_ID_KEY;
 
@@ -49,6 +52,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     private static class UniqueKeys0 extends AbstractKeys {
+        public static final UniqueKey<TTcAccountRecord> T_TC_ACCOUNT_PKEY = createUniqueKey(TTcAccount.T_TC_ACCOUNT, "t_tc_account_pkey", TTcAccount.T_TC_ACCOUNT.ACCOUNT_ID);
         public static final UniqueKey<TTcUserRecord> T_TC_USER_PKEY = createUniqueKey(TTcUser.T_TC_USER, "t_tc_user_pkey", TTcUser.T_TC_USER.USER_ID);
         public static final UniqueKey<TTcUserRecord> T_TC_USER_ALI_USER_ID_KEY = createUniqueKey(TTcUser.T_TC_USER, "t_tc_user_ali_user_id_key", TTcUser.T_TC_USER.ALI_USER_ID);
     }

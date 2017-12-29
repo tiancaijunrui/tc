@@ -4,6 +4,7 @@
 package com.kotlin.zcj.tc.data;
 
 
+import com.kotlin.zcj.tc.data.tables.TTcAccount;
 import com.kotlin.zcj.tc.data.tables.TTcUser;
 
 import javax.annotation.Generated;
@@ -21,6 +22,11 @@ import javax.annotation.Generated;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
+
+    /**
+     * The table <code>public.t_tc_account</code>.
+     */
+    public static final TTcAccount T_TC_ACCOUNT = com.kotlin.zcj.tc.data.tables.TTcAccount.T_TC_ACCOUNT;
 
     /**
      * The table <code>public.t_tc_user</code>.

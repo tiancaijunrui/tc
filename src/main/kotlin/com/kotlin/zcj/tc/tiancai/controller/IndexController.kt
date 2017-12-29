@@ -4,8 +4,11 @@ import com.alipay.api.AlipayApiException
 import com.alipay.api.DefaultAlipayClient
 import com.alipay.api.request.AlipaySystemOauthTokenRequest
 import com.alipay.api.request.AlipayUserInfoShareRequest
+import com.kotlin.zcj.tc.data.tables.records.TTcAccountRecord
 import com.kotlin.zcj.tc.data.tables.records.TTcUserRecord
 import com.kotlin.zcj.tc.tiancai.alipay.config.AlipayConfig
+import com.kotlin.zcj.tc.tiancai.entity.Page
+import com.kotlin.zcj.tc.tiancai.service.AccountService
 import com.kotlin.zcj.tc.tiancai.service.UserService
 import com.kotlin.zcj.tc.tiancai.utils.TcConstants
 import com.kotlin.zcj.tc.tiancai.utils.TcUtils
@@ -34,6 +37,8 @@ class IndexController {
     lateinit private var userService: UserService
     @Resource
     lateinit private var stringRedis: StringRedisTemplate;
+    @Resource
+    lateinit private var accountService : AccountService;
 
     @RequestMapping("/index.html")
     @ResponseBody
@@ -98,6 +103,9 @@ class IndexController {
     fun test(request: HttpServletRequest, response: HttpServletResponse, @PathVariable("userId") userId: String): ModelAndView {
         val user = userService.load(userId)
         request.setAttribute("user",user);
+        val account = TTcAccountRecord();
+        account.userId = user.userId
+        accountService.pageAccount(account,Page<TTcAccountRecord>())
         return ModelAndView("console");
     }
 

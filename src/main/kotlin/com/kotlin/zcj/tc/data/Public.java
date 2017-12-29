@@ -4,6 +4,7 @@
 package com.kotlin.zcj.tc.data;
 
 
+import com.kotlin.zcj.tc.data.tables.TTcAccount;
 import com.kotlin.zcj.tc.data.tables.TTcUser;
 
 import java.util.ArrayList;
@@ -30,12 +31,17 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Public extends SchemaImpl {
 
-    private static final long serialVersionUID = -1830329836;
+    private static final long serialVersionUID = -1802617948;
 
     /**
      * The reference instance of <code>public</code>
      */
     public static final Public PUBLIC = new Public();
+
+    /**
+     * The table <code>public.t_tc_account</code>.
+     */
+    public final TTcAccount T_TC_ACCOUNT = com.kotlin.zcj.tc.data.tables.TTcAccount.T_TC_ACCOUNT;
 
     /**
      * The table <code>public.t_tc_user</code>.
@@ -67,6 +73,7 @@ public class Public extends SchemaImpl {
 
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
+            TTcAccount.T_TC_ACCOUNT,
             TTcUser.T_TC_USER);
     }
 }
