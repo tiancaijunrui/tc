@@ -24,24 +24,28 @@ class AccountServiceImpl : AccountService {
     lateinit private var stringRedis: StringRedisTemplate;
 
 
-    override fun pageAccount(account: TTcAccountRecord, page: Page<TTcAccountRecord>): Page<TTcAccount>? {
-//        val mdl = dsl!!.selectFrom(Tables.T_TC_ACCOUNT).where("1 = 1")
-//        genMdl(account, mdl);
+    override fun pageAccount(account: TTcAccountRecord, page: Page<TTcAccountRecord>): Page<TTcAccountRecord> {
         if (page.autoPaging) {
-            var mdl = dsl!!.selectCount().from(T_TC_ACCOUNT).where("1=1").fetchOne(0, Int::class.java)
-//            genMdl(account, mdl).fetchOne(0,Int)
+            val mdl = dsl!!.selectCount().from(T_TC_ACCOUNT).where("1=1")
+            if (!StringUtils.isEmpty(account.userId)) {
+                mdl.and(T_TC_ACCOUNT.USER_ID.eq(account.userId))
+            }
+            if (!StringUtils.isEmpty(account.corpCode)) {
+                mdl.and(T_TC_ACCOUNT.CORP_CODE.eq(account.corpCode))
+            }
+            page.total = mdl.fetchOne(0, Int::class.java)
         }
-        return null;
+        val mdl = dsl!!.selectFrom(T_TC_ACCOUNT).where("1 = 1")
+        if (!StringUtils.isEmpty(account.userId)) {
+            mdl.and(T_TC_ACCOUNT.USER_ID.eq(account.userId))
+        }
+        if (!StringUtils.isEmpty(account.corpCode)) {
+            mdl.and(T_TC_ACCOUNT.CORP_CODE.eq(account.corpCode))
+        }
+        if (page.autoPaging) {
+            mdl.limit(page.size).offset((page.pageNo - 1) * (page.size + 1))
+        }
+        page.data = mdl.fetch()
+        return page;
     }
-
-    private fun genMdl(account: TTcAccount, mdl: SelectConditionStep<TTcAccountRecord>): SelectConditionStep<TTcAccountRecord> {
-        if (!StringUtils.isEmpty(account.USER_ID)) {
-            mdl.and(T_TC_ACCOUNT.USER_ID.eq(account.USER_ID))
-        }
-        if (!StringUtils.isEmpty(account.CORP_CODE)) {
-            mdl.and(T_TC_ACCOUNT.CORP_CODE.eq(account.USER_ID))
-        }
-        return mdl;
-    }
-
 }

@@ -11,5 +11,6 @@ class Page<T> {
     var pageNo: Int = 1;
     var autoPaging: Boolean = true;
     var total : Int = 0;
+    var data  = mutableListOf<T>()
 
 }

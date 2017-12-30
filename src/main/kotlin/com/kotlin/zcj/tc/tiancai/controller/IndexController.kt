@@ -100,12 +100,13 @@ class IndexController {
 
     @RequestMapping("/myConsole/{userId}.html")
     @ResponseBody
-    fun test(request: HttpServletRequest, response: HttpServletResponse, @PathVariable("userId") userId: String): ModelAndView {
+    fun test(request: HttpServletRequest, response: HttpServletResponse, @PathVariable("userId") userId: String,page: Page<TTcAccountRecord>): ModelAndView {
         val user = userService.load(userId)
         request.setAttribute("user",user);
         val account = TTcAccountRecord();
         account.userId = user.userId
-        accountService.pageAccount(account,Page<TTcAccountRecord>())
+        accountService.pageAccount(account,page)
+        request.setAttribute("page",page)
         return ModelAndView("console");
     }
 
