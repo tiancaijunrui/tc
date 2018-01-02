@@ -9,4 +9,7 @@ import org.springframework.stereotype.Service
 @Service
 interface CorpCodeService {
     fun listCorp() : MutableList<TTcCorpCodeRecord>
+    fun save( corpCode : TTcCorpCodeRecord) : String
+
+
 }
