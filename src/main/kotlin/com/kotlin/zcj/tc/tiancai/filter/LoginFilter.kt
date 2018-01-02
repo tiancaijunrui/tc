@@ -2,12 +2,11 @@ package com.kotlin.zcj.tc.tiancai.filter
 
 import com.kotlin.zcj.tc.tiancai.service.UserService
 import com.kotlin.zcj.tc.tiancai.utils.TcConstants
+import com.kotlin.zcj.tc.tiancai.utils.TcExecutionContext
 import com.kotlin.zcj.tc.tiancai.utils.TcUtils
-import org.apache.catalina.connector.RequestFacade
 import org.springframework.core.annotation.Order
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.util.StringUtils
-import org.springframework.web.context.support.WebApplicationContextUtils
 import java.util.concurrent.TimeUnit
 import javax.annotation.Resource
 import javax.servlet.*
@@ -55,6 +54,7 @@ class LoginFilter : Filter {
             stringRedis.expire(sessionId, 60 * 60 * 1000, TimeUnit.MILLISECONDS)
             request.setAttribute("sessionId", sessionId)
             val userId = TcUtils.parseJWt(token.substring(TcConstants.pre_token.length))["userId"] as String
+            TcExecutionContext.setUserId(userId)
             request.setAttribute("userId", userId)
             val user = userService.load(userId)
             request.setAttribute("user",user);

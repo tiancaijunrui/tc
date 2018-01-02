@@ -38,6 +38,9 @@ CREATE TABLE t_tc_account (
 CREATE TABLE t_tc_corp_code (
   corp_id VARCHAR(32) PRIMARY key,
   corp_code VARCHAR (100) not null,
+  link VARCHAR(100),
+  introduce VARCHAR(5000),
+  type VARCHAR(20),
   create_by VARCHAR (32) NOT NULL,
   create_time TIMESTAMP (6) NOT NULL,
   update_by VARCHAR (32) NOT NULL,

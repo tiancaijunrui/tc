@@ -17,21 +17,20 @@
             <label class="layui-form-label">账号</label>
             <div class="layui-input-inline">
                 <input type="text" name="title" required lay-verify="required" placeholder="登陆账号" autocomplete="off"
-                       class="layui-input">
+                       class="layui-input layui-input-width-300">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">密码</label>
             <div class="layui-input-inline">
                 <input type="password" name="password" required lay-verify="required" placeholder="登录密码"
-                       autocomplete="off" class="layui-input">
+                       autocomplete="off" class="layui-input layui-input-width-300">
             </div>
-            <div class="layui-form-mid layui-word-aux">辅助文字</div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">选择框</label>
+            <label class="layui-form-label">公司</label>
             <div class="layui-input-block">
-                <select name="city" lay-verify="required">
+                <select name="city" lay-verify="required" lay-search>
                     <option value=""></option>
                     <option value="0">北京</option>
                     <option value="1">上海</option>
@@ -76,7 +75,11 @@
         </div>
     </form>
 </div>
-
+<style type="text/css">
+    .layui-input-width-300{
+        width: 300%;
+    }
+</style>
 <script>
     //Demo
     layui.use(['carousel', 'form'], function () {
