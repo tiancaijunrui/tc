@@ -1,4 +1,4 @@
-<#import "utils/formWorkTemplate.ftl" as p>
+<#import "../utils/formWorkTemplate.ftl" as p>
 <@p.pageFrame title="index">
 <table class="layui-table" lay-data="{height: 'full-200', cellMinWidth: 80, page: true, limit:30, url:'/demo/table/user/'}">
     <thead>

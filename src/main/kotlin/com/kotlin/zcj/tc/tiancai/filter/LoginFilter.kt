@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse
  * @Since2017/12/18 ZhaCongJie@HF
  */
 @Order(1)
-@WebFilter(filterName = "loginFilter", urlPatterns = arrayOf("/index/*"))
+@WebFilter(filterName = "loginFilter", urlPatterns = arrayOf("/index/*","/ac/*"))
 class LoginFilter : Filter {
     @Resource
     lateinit private var userService: UserService
@@ -54,7 +54,10 @@ class LoginFilter : Filter {
             stringRedis.opsForValue().getAndSet(sessionId, newToken)
             stringRedis.expire(sessionId, 60 * 60 * 1000, TimeUnit.MILLISECONDS)
             request.setAttribute("sessionId", sessionId)
-            request.setAttribute("userId", TcUtils.parseJWt(token.substring(TcConstants.pre_token.length))["userId"] as String)
+            val userId = TcUtils.parseJWt(token.substring(TcConstants.pre_token.length))["userId"] as String
+            request.setAttribute("userId", userId)
+            val user = userService.load(userId)
+            request.setAttribute("user",user);
             chain!!.doFilter(request, response);
         } else {
             response.sendRedirect(authUrl)

@@ -5,6 +5,7 @@ package com.kotlin.zcj.tc.data;
 
 
 import com.kotlin.zcj.tc.data.tables.TTcAccount;
+import com.kotlin.zcj.tc.data.tables.TTcCorpCode;
 import com.kotlin.zcj.tc.data.tables.TTcUser;
 
 import javax.annotation.Generated;
@@ -27,6 +28,11 @@ public class Tables {
      * The table <code>public.t_tc_account</code>.
      */
     public static final TTcAccount T_TC_ACCOUNT = com.kotlin.zcj.tc.data.tables.TTcAccount.T_TC_ACCOUNT;
+
+    /**
+     * The table <code>public.t_tc_corp_code</code>.
+     */
+    public static final TTcCorpCode T_TC_CORP_CODE = com.kotlin.zcj.tc.data.tables.TTcCorpCode.T_TC_CORP_CODE;
 
     /**
      * The table <code>public.t_tc_user</code>.

@@ -7,7 +7,9 @@ import com.alipay.api.request.AlipayUserInfoShareRequest
 import com.kotlin.zcj.tc.data.tables.records.TTcAccountRecord
 import com.kotlin.zcj.tc.data.tables.records.TTcUserRecord
 import com.kotlin.zcj.tc.tiancai.alipay.config.AlipayConfig
+import com.kotlin.zcj.tc.tiancai.entity.AccountCondition
 import com.kotlin.zcj.tc.tiancai.entity.Page
+import com.kotlin.zcj.tc.tiancai.entity.User
 import com.kotlin.zcj.tc.tiancai.service.AccountService
 import com.kotlin.zcj.tc.tiancai.service.UserService
 import com.kotlin.zcj.tc.tiancai.utils.TcConstants
@@ -101,13 +103,12 @@ class IndexController {
     @RequestMapping("/myConsole/{userId}.html")
     @ResponseBody
     fun test(request: HttpServletRequest, response: HttpServletResponse, @PathVariable("userId") userId: String,page: Page<TTcAccountRecord>): ModelAndView {
-        val user = userService.load(userId)
-        request.setAttribute("user",user);
-        val account = TTcAccountRecord();
+        val user : TTcUserRecord = request.getAttribute("user") as TTcUserRecord;
+        val account = AccountCondition();
         account.userId = user.userId
         accountService.pageAccount(account,page)
         request.setAttribute("page",page)
-        return ModelAndView("console");
+        return ModelAndView("account/console");
     }
 
 }

@@ -36,7 +36,7 @@
                 <li class="layui-nav-item layui-nav-itemed">
                     <a class="" href="javascript:;">账号管理</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">添加账号</a></dd>
+                        <dd><a href="/ac/toAdd.html?sessionId=${sessionId!}" target="_self">添加账号</a></dd>
                         <dd><a href="javascript:;">修改账号</a></dd>
                         <dd><a href="javascript:;">查询</a></dd>
                     </dl>

@@ -1,7 +1,7 @@
 package com.kotlin.zcj.tc.tiancai.service
 
-import com.kotlin.zcj.tc.data.tables.TTcAccount
 import com.kotlin.zcj.tc.data.tables.records.TTcAccountRecord
+import com.kotlin.zcj.tc.tiancai.entity.AccountCondition
 import com.kotlin.zcj.tc.tiancai.entity.Page
 import org.springframework.stereotype.Service
 
@@ -10,6 +10,6 @@ import org.springframework.stereotype.Service
  */
 @Service
 interface AccountService {
-    fun pageAccount(account: TTcAccountRecord, page: Page<TTcAccountRecord>): Page<TTcAccountRecord>?
+    fun pageAccount(account: AccountCondition, page: Page<TTcAccountRecord>): Page<TTcAccountRecord>?
 
 }
