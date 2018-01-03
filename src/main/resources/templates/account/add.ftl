@@ -11,77 +11,94 @@
         </div>
     </div>
     <br>
-    <form class="layui-form" action="">
-        <input type="hidden" name="account.userId = ${(user.userId)!}">
+    <form class="layui-form" action="add.html?sessionId=${sessionId!}" method="post">
+        <input type="hidden" name="userId" value="${(user.userId)!}">
         <div class="layui-form-item">
-            <label class="layui-form-label">账号</label>
+            <label class="layui-form-label"><span style="color: red">*</span>账号</label>
             <div class="layui-input-inline">
-                <input type="text" name="title" required lay-verify="required" placeholder="登陆账号" autocomplete="off"
+                <input type="text" name="loginName" required lay-verify="required" placeholder="登陆账号"
+                       autocomplete="off"
                        class="layui-input layui-input-width-300">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">密码</label>
+            <label class="layui-form-label"><span style="color: red">*</span>密码</label>
             <div class="layui-input-inline">
-                <input type="password" name="password" required lay-verify="required" placeholder="登录密码"
+                <input type="password" name="password" required lay-verify="pass" placeholder="登录密码"
                        autocomplete="off" class="layui-input layui-input-width-300">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">公司</label>
+            <label class="layui-form-label"><span style="color: red">*</span>公司</label>
             <div class="layui-input-block">
-                <select name="city" lay-verify="required" lay-search>
+                <select name="corpId" lay-verify="required" lay-search>
                     <option value=""></option>
-                    <option value="0">北京</option>
-                    <option value="1">上海</option>
-                    <option value="2">广州</option>
-                    <option value="3">深圳</option>
-                    <option value="4">杭州</option>
+                    <#if corpCodeList ?? && corpCodeList?size gt 0>
+                        <#list corpCodeList as corpCode>
+                            <option value="${(corpCode.corpId)!}">${(corpCode.corpCode)!}</option>
+                        </#list>
+                    </#if>
                 </select>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">复选框</label>
-            <div class="layui-input-block">
-                <input type="checkbox" name="like[write]" title="写作">
-                <input type="checkbox" name="like[read]" title="阅读" checked>
-                <input type="checkbox" name="like[dai]" title="发呆">
+            <label class="layui-form-label">绑定手机</label>
+            <div class="layui-input-inline">
+                <input type="text" name="phone"  placeholder="手机号码"
+                       autocomplete="off"
+                       class="layui-input layui-input-width-300">
             </div>
         </div>
+
         <div class="layui-form-item">
-            <label class="layui-form-label">开关</label>
-            <div class="layui-input-block">
-                <input type="checkbox" name="switch" lay-skin="switch">
+            <label class="layui-form-label">绑定邮箱</label>
+            <div class="layui-input-inline">
+                <input type="text" name="email"  placeholder="邮箱" autocomplete="off"
+                       class="layui-input layui-input-width-300">
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">单选框</label>
-            <div class="layui-input-block">
-                <input type="radio" name="sex" value="男" title="男">
-                <input type="radio" name="sex" value="女" title="女" checked>
-            </div>
-        </div>
+
         <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label">文本域</label>
+            <label class="layui-form-label">密保问题一</label>
             <div class="layui-input-block">
-                <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+                <textarea name="answerOne" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">密保问题二</label>
+            <div class="layui-input-block">
+                <textarea name="answerTwo" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">密保问题三</label>
+            <div class="layui-input-block">
+                <textarea name="answerThree" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">密保问题四</label>
+            <div class="layui-input-block">
+                <textarea name="answerFour" placeholder="请输入内容" class="layui-textarea"></textarea>
             </div>
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                <button class="layui-btn" lay-submit >立即提交</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
     </form>
 </div>
 <style type="text/css">
-    .layui-input-width-300{
+    .layui-input-width-300 {
         width: 300%;
     }
 </style>
 <script>
-    //Demo
     layui.use(['carousel', 'form'], function () {
         var form = layui.form;
         var carousel = layui.carousel;

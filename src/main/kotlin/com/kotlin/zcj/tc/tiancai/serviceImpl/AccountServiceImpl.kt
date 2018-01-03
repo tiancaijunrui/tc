@@ -7,12 +7,16 @@ import com.kotlin.zcj.tc.data.tables.records.TTcAccountRecord
 import com.kotlin.zcj.tc.tiancai.entity.AccountCondition
 import com.kotlin.zcj.tc.tiancai.entity.Page
 import com.kotlin.zcj.tc.tiancai.service.AccountService
+import com.kotlin.zcj.tc.tiancai.utils.TcExecutionContext
+import com.kotlin.zcj.tc.tiancai.utils.TcUtils
 import org.jooq.DSLContext
 import org.jooq.SelectConditionStep
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import sun.misc.MessageUtils.where
+import java.sql.Timestamp
+import java.util.*
 import javax.annotation.Resource
 
 /**
@@ -20,8 +24,23 @@ import javax.annotation.Resource
  */
 @Service("accountService")
 class AccountServiceImpl : AccountService {
+    override fun save(account: AccountCondition): String {
+        val accountId = TcUtils.genUUID()
+        val now = Date()
+        if (StringUtils.isEmpty(account.accountId)) {
+            account.accountId = accountId
+            dsl.insertInto(T_TC_ACCOUNT).set(T_TC_ACCOUNT.CORP_ID, account.corpId).set(T_TC_ACCOUNT.LOGIN_NAME, account.loginName)
+                    .set(T_TC_ACCOUNT.PASSWORD, account.password).set(T_TC_ACCOUNT.USER_ID, account.userId).set(T_TC_ACCOUNT.EMAIL, account.email)
+                    .set(T_TC_ACCOUNT.ACCOUNT_ID, account.accountId).set(T_TC_ACCOUNT.PHONE, account.phone).set(T_TC_ACCOUNT.ENCRYPTED_ANSWERS_ONE, account.answerOne)
+                    .set(T_TC_ACCOUNT.ENCRYPTED_ANSWERS_TWO, account.answerTwo).set(T_TC_ACCOUNT.ENCRYPTED_ANSWERS_THREE, account.answerThree).set(T_TC_ACCOUNT.ENCRYPTED_ANSWERS_FOUR, account.answerFour)
+                    .set(T_TC_ACCOUNT.UPDATE_TIME, Timestamp(now.time)).set(T_TC_ACCOUNT.UPDATE_BY, TcExecutionContext.getUserId()).set(T_TC_ACCOUNT.CREATE_BY, TcExecutionContext.getUserId())
+                    .set(T_TC_ACCOUNT.CREATE_TIME, Timestamp(now.time)).execute()
+        }
+        return accountId;
+    }
+
     @Resource
-    var dsl: DSLContext? = null
+    lateinit var dsl: DSLContext
 
     @Resource
     lateinit private var stringRedis: StringRedisTemplate;
