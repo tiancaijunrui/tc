@@ -31,7 +31,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label"><span style="color: red">*</span>公司</label>
             <div class="layui-input-block">
-                <select name="corpId" lay-verify="required" lay-search>
+                <select name="corpId" lay-verify="required" lay-search >
                     <option value=""></option>
                     <#if corpCodeList ?? && corpCodeList?size gt 0>
                         <#list corpCodeList as corpCode>

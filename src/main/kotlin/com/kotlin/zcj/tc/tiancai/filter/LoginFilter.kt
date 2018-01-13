@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit
 import javax.annotation.Resource
 import javax.servlet.*
 import javax.servlet.annotation.WebFilter
+import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -37,7 +38,15 @@ class LoginFilter : Filter {
             chain!!.doFilter(request, response);
             return;
         }
-        val sessionId : String? = request.getParameter("sessionId")
+        var sessionId : String? = request.getParameter("sessionId")
+        if (StringUtils.isEmpty(sessionId)){
+            val cookies = request.cookies
+            for (cookie in cookies){
+                if (cookie.name == "tc_session_id"){
+                    sessionId = cookie.value;
+                }
+            }
+        }
         if (StringUtils.isEmpty(sessionId)){
             response.sendRedirect(authUrl)
             return
@@ -53,6 +62,8 @@ class LoginFilter : Filter {
             stringRedis.opsForValue().getAndSet(sessionId, newToken)
             stringRedis.expire(sessionId, 60 * 60 * 1000, TimeUnit.MILLISECONDS)
             request.setAttribute("sessionId", sessionId)
+            val cookie = Cookie("tc_session_id",sessionId)
+            response.addCookie(cookie)
             val userId = TcUtils.parseJWt(token.substring(TcConstants.pre_token.length))["userId"] as String
             TcExecutionContext.setUserId(userId)
             request.setAttribute("userId", userId)

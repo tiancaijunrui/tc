@@ -1,6 +1,6 @@
 <#import "../utils/formWorkTemplate.ftl" as p>
 <@p.pageFrame title="index">
-<table class="layui-table" lay-data="{height: 'full-200', cellMinWidth: 80, page: true, limit:30, url:'/demo/table/user/'}">
+<table class="layui-table" lay-data="{height: 'full-200', cellMinWidth: 80, page: true, limit:30, url:'/ac/loadAccount.html?sessionId=${sessionId!}',method:'post'}">
     <thead>
     <tr>
         <th lay-data="{type:'checkbox'}">ID</th>
@@ -17,5 +17,24 @@
     layui.use('table', function(){
         var table = layui.table;
     });
+    <#--$.post('/ac/loadAccount.html?sessionId=${sessionId!}',function () {-->
+        <#--debugger;-->
+    <#--});-->
+
+    <#--$.ajax({-->
+        <#--type: "POST",-->
+        <#--contentType: "application/json",-->
+        <#--url: "/ac/loadAccount.html",-->
+        <#--data: {sessionId:'${sessionId!}'},-->
+        <#--dataType: 'json',-->
+        <#--cache: false,-->
+        <#--timeout: 600000,-->
+        <#--success: function (data) {-->
+            <#--debugger-->
+        <#--},-->
+        <#--error: function (e) {-->
+            <#--debugger;-->
+        <#--}-->
+    <#--});-->
 </script>
 </@p.pageFrame>
