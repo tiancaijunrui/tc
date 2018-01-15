@@ -51,12 +51,15 @@ class AccountController {
         val exAccountCondition = AccountCondition()
         if (accountCondition == null) {
             val page = accountService.pageAccount(exAccountCondition, accountCondition!!.page)
-            page?.let { dataMap.put("data", it) }
+            page?.let {dataMap.put("data", page.data)}
+            page?.total?.let { dataMap.put("count", it) }
         }else{
             val page = accountService.pageAccount(accountCondition, accountCondition.page)
-            page?.let { dataMap.put("data", it) }
+            page?.let {dataMap.put("data", page.data)}
+            page?.total?.let { dataMap.put("count", it) }
         }
         dataMap.put("status", "success")
+        dataMap.put("code",0)
         return dataMap;
 
     }
