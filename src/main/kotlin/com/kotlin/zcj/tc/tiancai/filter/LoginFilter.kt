@@ -40,12 +40,7 @@ class LoginFilter : Filter {
         }
         var sessionId : String? = request.getParameter("sessionId")
         if (StringUtils.isEmpty(sessionId)){
-            val cookies = request.cookies
-            for (cookie in cookies){
-                if (cookie.name == "tc_session_id"){
-                    sessionId = cookie.value;
-                }
-            }
+            sessionId = TcUtils.getSessionIdFromCookie(request);
         }
         if (StringUtils.isEmpty(sessionId)){
             response.sendRedirect(authUrl)
@@ -62,8 +57,7 @@ class LoginFilter : Filter {
             stringRedis.opsForValue().getAndSet(sessionId, newToken)
             stringRedis.expire(sessionId, 60 * 60 * 1000, TimeUnit.MILLISECONDS)
             request.setAttribute("sessionId", sessionId)
-            val cookie = Cookie("tc_session_id",sessionId)
-            response.addCookie(cookie)
+            sessionId?.let { TcUtils.addSessionIdToCookie(response, it) };
             val userId = TcUtils.parseJWt(token.substring(TcConstants.pre_token.length))["userId"] as String
             TcExecutionContext.setUserId(userId)
             request.setAttribute("userId", userId)

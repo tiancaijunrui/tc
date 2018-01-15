@@ -9,7 +9,9 @@ import io.jsonwebtoken.SignatureAlgorithm
 import java.security.Key
 import java.util.*
 import javax.crypto.spec.SecretKeySpec
+import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 import javax.xml.bind.DatatypeConverter
 
 /**
@@ -77,7 +79,7 @@ object TcUtils {
         val result = validateToken(parseJWt(exToken), getIP(request), jwtId)
         val sign: Boolean = result["sign"] as Boolean
         return if (sign) {
-            val newToken = refreshToken(exToken,jwtId)
+            val newToken = refreshToken(exToken, jwtId)
             request.setAttribute("sessionId", TcConstants.pre_token + newToken)
             true;
         } else {
@@ -155,5 +157,20 @@ object TcUtils {
         calendar.set(Calendar.MINUTE, 59)
         calendar.set(Calendar.SECOND, 59)
         return calendar.time
+    }
+
+    fun getSessionIdFromCookie(request: HttpServletRequest): String? {
+        val cookies = request.cookies
+        for (cookie in cookies) {
+            if (cookie.name == "tc_session_id") {
+                return cookie.value
+            }
+        }
+        return null;
+    }
+
+    fun addSessionIdToCookie(response: HttpServletResponse, sessionId: String){
+        val cookie = Cookie("tc_session_id", sessionId)
+        response.addCookie(cookie)
     }
 }

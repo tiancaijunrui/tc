@@ -74,6 +74,7 @@ class IndexController {
         stringRedis.opsForValue().set(sessionId, TcConstants.pre_token + token)
         stringRedis.expire(sessionId, 60 * 60 * 1000, TimeUnit.MILLISECONDS)
         request.setAttribute("sessionId", sessionId);
+        sessionId.let { TcUtils.addSessionIdToCookie(response, it) };
         return ModelAndView("index")
     }
 
@@ -102,7 +103,7 @@ class IndexController {
 
     @RequestMapping("/myConsole/{userId}.html")
     @ResponseBody
-    fun test(request: HttpServletRequest, response: HttpServletResponse, @PathVariable("userId") userId: String,page: Page<TTcAccountRecord>): ModelAndView {
+    fun test(request: HttpServletRequest, response: HttpServletResponse, @PathVariable("userId") userId: String,page: Page<AccountCondition>): ModelAndView {
         val user : TTcUserRecord = request.getAttribute("user") as TTcUserRecord;
         val account = AccountCondition();
         account.userId = user.userId

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 interface AccountService {
-    fun pageAccount(account: AccountCondition, page: Page<TTcAccountRecord>): Page<TTcAccountRecord>?
+    fun pageAccount(account: AccountCondition, page: Page<AccountCondition>): Page<AccountCondition>?
     fun save(account: AccountCondition) : String
 
 }

@@ -1,5 +1,6 @@
 package com.kotlin.zcj.tc.tiancai.controller
 
+import com.kotlin.zcj.tc.data.tables.records.TTcAccountRecord
 import com.kotlin.zcj.tc.tiancai.entity.AccountCondition
 import com.kotlin.zcj.tc.tiancai.entity.Page
 import com.kotlin.zcj.tc.tiancai.service.AccountService
@@ -9,6 +10,7 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.ModelAndView
 import javax.annotation.Resource
 import javax.servlet.http.HttpServletRequest
@@ -20,6 +22,7 @@ import javax.validation.Valid
  */
 @Controller
 @RequestMapping("/ac")
+@RestController
 class AccountController {
     @Resource
     lateinit var corpCodeService: CorpCodeService
@@ -48,8 +51,10 @@ class AccountController {
         val exAccountCondition = AccountCondition()
         if (accountCondition == null) {
             val page = accountService.pageAccount(exAccountCondition, accountCondition!!.page)
+            page?.let { dataMap.put("data", it) }
         }else{
             val page = accountService.pageAccount(accountCondition, accountCondition.page)
+            page?.let { dataMap.put("data", it) }
         }
         dataMap.put("status", "success")
         return dataMap;

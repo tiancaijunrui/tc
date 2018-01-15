@@ -24,45 +24,68 @@ import javax.annotation.Resource
  */
 @Service("accountService")
 class AccountServiceImpl : AccountService {
-    override fun save(account: AccountCondition): String {
-        val accountId = TcUtils.genUUID()
-        val now = Date()
-        if (StringUtils.isEmpty(account.accountId)) {
-            account.accountId = accountId
-            dsl.insertInto(T_TC_ACCOUNT).set(T_TC_ACCOUNT.CORP_ID, account.corpId).set(T_TC_ACCOUNT.LOGIN_NAME, account.loginName)
-                    .set(T_TC_ACCOUNT.PASSWORD, account.password).set(T_TC_ACCOUNT.USER_ID, account.userId).set(T_TC_ACCOUNT.EMAIL, account.email)
-                    .set(T_TC_ACCOUNT.ACCOUNT_ID, account.accountId).set(T_TC_ACCOUNT.PHONE, account.phone).set(T_TC_ACCOUNT.ENCRYPTED_ANSWERS_ONE, account.answerOne)
-                    .set(T_TC_ACCOUNT.ENCRYPTED_ANSWERS_TWO, account.answerTwo).set(T_TC_ACCOUNT.ENCRYPTED_ANSWERS_THREE, account.answerThree).set(T_TC_ACCOUNT.ENCRYPTED_ANSWERS_FOUR, account.answerFour)
-                    .set(T_TC_ACCOUNT.UPDATE_TIME, Timestamp(now.time)).set(T_TC_ACCOUNT.UPDATE_BY, TcExecutionContext.getUserId()).set(T_TC_ACCOUNT.CREATE_BY, TcExecutionContext.getUserId())
-                    .set(T_TC_ACCOUNT.CREATE_TIME, Timestamp(now.time)).execute()
-        }
-        return accountId;
-    }
-
     @Resource
     lateinit var dsl: DSLContext
 
     @Resource
     lateinit private var stringRedis: StringRedisTemplate;
+    private val tAccount = T_TC_ACCOUNT
+    private val tCorpCode = T_TC_CORP_CODE
+
+    override fun save(account: AccountCondition): String {
+        val accountId = TcUtils.genUUID()
+        val now = Date()
+        if (StringUtils.isEmpty(account.accountId)) {
+            account.accountId = accountId
+            dsl.insertInto(tAccount).set(tAccount.CORP_ID, account.corpId).set(tAccount.LOGIN_NAME, account.loginName)
+                    .set(tAccount.PASSWORD, account.password).set(tAccount.USER_ID, account.userId).set(tAccount.EMAIL, account.email)
+                    .set(tAccount.ACCOUNT_ID, account.accountId).set(tAccount.PHONE, account.phone).set(tAccount.ENCRYPTED_ANSWERS_ONE, account.answerOne)
+                    .set(tAccount.ENCRYPTED_ANSWERS_TWO, account.answerTwo).set(tAccount.ENCRYPTED_ANSWERS_THREE, account.answerThree).set(tAccount.ENCRYPTED_ANSWERS_FOUR, account.answerFour)
+                    .set(tAccount.UPDATE_TIME, Timestamp(now.time)).set(tAccount.UPDATE_BY, TcExecutionContext.getUserId()).set(tAccount.CREATE_BY, TcExecutionContext.getUserId())
+                    .set(tAccount.CREATE_TIME, Timestamp(now.time)).execute()
+        }
+        return accountId;
+    }
 
 
-    override fun pageAccount(account: AccountCondition, page: Page<TTcAccountRecord>): Page<TTcAccountRecord> {
+
+
+    override fun pageAccount(account: AccountCondition, page: Page<AccountCondition>): Page<AccountCondition> {
+        if (StringUtils.isEmpty(account.userId)){
+            account.userId = TcExecutionContext.getUserId()
+        }
         if (page.autoPaging) {
-            val mdl = dsl!!.selectCount().from(T_TC_ACCOUNT).leftAntiJoin(T_TC_CORP_CODE).on(T_TC_ACCOUNT.CORP_ID.eq(T_TC_CORP_CODE.CORP_ID))
-            mdl.where(T_TC_ACCOUNT.USER_ID.eq(account.userId))
+            val mdl = dsl.selectCount().from(tAccount).leftJoin(tCorpCode).on(tAccount.CORP_ID.eq(tCorpCode.CORP_ID))
+            mdl.where(tAccount.USER_ID.eq(account.userId))
             if (!StringUtils.isEmpty(account.corpCode)) {
-                mdl.and(T_TC_CORP_CODE.CORP_CODE.like("%" + account.corpCode + "%"))
+                mdl.and(tCorpCode.CORP_CODE.like("%" + account.corpCode + "%"))
             }
             page.total = mdl.fetchOne(0, Int::class.java)
         }
-        val mdl = dsl!!.selectFrom(T_TC_ACCOUNT).where(T_TC_ACCOUNT.USER_ID.eq(account.userId))
+        val mdl =dsl.select().from(tAccount).leftJoin(tCorpCode).on(tAccount.CORP_ID.eq(tCorpCode.CORP_ID))
+        mdl.where(tAccount.USER_ID.eq(account.userId))
         if (!StringUtils.isEmpty(account.corpCode)) {
-            mdl.and(T_TC_CORP_CODE.CORP_CODE.like("%" + account.corpCode + "%"))
+            mdl.and(tCorpCode.CORP_CODE.like("%" + account.corpCode + "%"))
         }
         if (page.autoPaging) {
             mdl.limit(page.size).offset((page.pageNo - 1) * (page.size + 1))
         }
-        page.data = mdl.fetch()
+        val accountList  = mutableListOf<AccountCondition>()
+        mdl.forEach({
+            val exAccount  = AccountCondition()
+            exAccount.userId = it[tAccount.USER_ID]
+            exAccount.accountId = it[tAccount.ACCOUNT_ID]
+            exAccount.loginName = it[tAccount.LOGIN_NAME]
+            exAccount.corpId = it[tAccount.CORP_ID]
+            exAccount.corpCode = it[tCorpCode.CORP_CODE]
+            exAccount.answerOne = it[tAccount.ENCRYPTED_ANSWERS_ONE]
+            exAccount.answerTwo = it[tAccount.ENCRYPTED_ANSWERS_TWO]
+            exAccount.answerThree = it[tAccount.ENCRYPTED_ANSWERS_THREE]
+            exAccount.answerFour = it[tAccount.ENCRYPTED_ANSWERS_FOUR]
+            exAccount.password = it[tAccount.PASSWORD]
+            accountList.add(exAccount)
+        })
+        page.data = accountList
         return page;
     }
 }

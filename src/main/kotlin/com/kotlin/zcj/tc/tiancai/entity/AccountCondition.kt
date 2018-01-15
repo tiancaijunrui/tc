@@ -23,5 +23,5 @@ class AccountCondition : BaseEntity() {
     var answerTwo: String = "";
     var answerThree: String = "";
     var answerFour: String = "";
-    var page : Page<TTcAccountRecord> = Page<TTcAccountRecord>()
+    var page : Page<AccountCondition> = Page<AccountCondition>()
 }
