@@ -10,6 +10,7 @@
     <script src="/layui/layui.js"></script>
     <link rel="stylesheet" href="/layui/css/layui.css" media="all"/>
 </head>
+<#if bodySign == 'true'>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
@@ -68,5 +69,8 @@
 </script>
 
 </body>
+<#else>
+    <#nested>
+</#if>
 </html>
 </#macro>

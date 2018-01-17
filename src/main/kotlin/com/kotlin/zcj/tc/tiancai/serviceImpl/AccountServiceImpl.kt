@@ -2,7 +2,6 @@ package com.kotlin.zcj.tc.tiancai.serviceImpl
 
 import com.kotlin.zcj.tc.data.Tables.T_TC_ACCOUNT
 import com.kotlin.zcj.tc.data.Tables.T_TC_CORP_CODE
-import com.kotlin.zcj.tc.data.tables.TTcAccount
 import com.kotlin.zcj.tc.data.tables.records.TTcAccountRecord
 import com.kotlin.zcj.tc.tiancai.entity.AccountCondition
 import com.kotlin.zcj.tc.tiancai.entity.Page
@@ -10,11 +9,9 @@ import com.kotlin.zcj.tc.tiancai.service.AccountService
 import com.kotlin.zcj.tc.tiancai.utils.TcExecutionContext
 import com.kotlin.zcj.tc.tiancai.utils.TcUtils
 import org.jooq.DSLContext
-import org.jooq.SelectConditionStep
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
-import sun.misc.MessageUtils.where
 import java.sql.Timestamp
 import java.util.*
 import javax.annotation.Resource
@@ -24,11 +21,44 @@ import javax.annotation.Resource
  */
 @Service("accountService")
 class AccountServiceImpl : AccountService {
+    override fun update(account: AccountCondition): String {
+        dsl.update(tAccount).set(tAccount.USER_ID, account.userId).set(tAccount.LOGIN_NAME, account.loginName)
+                .set(tAccount.CORP_ID, account.corpId).set(tAccount.ENCRYPTED_ANSWERS_ONE, account.answerOne)
+                .set(tAccount.ENCRYPTED_ANSWERS_TWO, account.answerTwo).set(tAccount.ENCRYPTED_ANSWERS_THREE, account.answerThree)
+                .set(tAccount.ENCRYPTED_ANSWERS_FOUR, account.answerFour).set(tAccount.UPDATE_TIME, Timestamp(Date().time))
+                .set(tAccount.PASSWORD, account.password).where(tAccount.ACCOUNT_ID.eq(account.accountId)).execute()
+        return account.accountId
+    }
+
+    override fun getByAccountId(accountId: String): AccountCondition? {
+        val accountRecord: TTcAccountRecord? = dsl.selectFrom(tAccount).where(tAccount.ACCOUNT_ID.eq(accountId)).fetchOne()
+        if (accountRecord == null) {
+            return null;
+        }
+        return genAccountByRecord(accountRecord)
+    }
+
+    private fun genAccountByRecord(accountRecord: TTcAccountRecord): AccountCondition {
+        val exAccount = AccountCondition()
+        exAccount.userId = accountRecord.userId
+        exAccount.accountId = accountRecord.accountId
+        exAccount.loginName = accountRecord.loginName
+        exAccount.corpId = accountRecord.corpId
+        exAccount.answerOne = accountRecord.encryptedAnswersOne
+        exAccount.answerTwo = accountRecord.encryptedAnswersTwo
+        exAccount.answerThree = accountRecord.encryptedAnswersThree
+        exAccount.answerFour = accountRecord.encryptedAnswersFour
+        exAccount.password = accountRecord.password
+        exAccount.phone = accountRecord.phone
+        exAccount.email = accountRecord.email
+        return exAccount
+    }
+
     @Resource
     lateinit var dsl: DSLContext
 
     @Resource
-    lateinit private var stringRedis: StringRedisTemplate;
+    private lateinit var stringRedis: StringRedisTemplate;
     private val tAccount = T_TC_ACCOUNT
     private val tCorpCode = T_TC_CORP_CODE
 
@@ -47,11 +77,8 @@ class AccountServiceImpl : AccountService {
         return accountId;
     }
 
-
-
-
     override fun pageAccount(account: AccountCondition, page: Page<AccountCondition>): Page<AccountCondition> {
-        if (StringUtils.isEmpty(account.userId)){
+        if (StringUtils.isEmpty(account.userId)) {
             account.userId = TcExecutionContext.getUserId()
         }
         if (page.autoPaging) {
@@ -62,7 +89,7 @@ class AccountServiceImpl : AccountService {
             }
             page.total = mdl.fetchOne(0, Int::class.java)
         }
-        val mdl =dsl.select().from(tAccount).leftJoin(tCorpCode).on(tAccount.CORP_ID.eq(tCorpCode.CORP_ID))
+        val mdl = dsl.select().from(tAccount).leftJoin(tCorpCode).on(tAccount.CORP_ID.eq(tCorpCode.CORP_ID))
         mdl.where(tAccount.USER_ID.eq(account.userId))
         if (!StringUtils.isEmpty(account.corpCode)) {
             mdl.and(tCorpCode.CORP_CODE.like("%" + account.corpCode + "%"))
@@ -70,9 +97,9 @@ class AccountServiceImpl : AccountService {
         if (page.autoPaging) {
             mdl.limit(page.size).offset((page.pageNo - 1) * (page.size + 1))
         }
-        val accountList  = mutableListOf<AccountCondition>()
+        val accountList = mutableListOf<AccountCondition>()
         mdl.forEach({
-            val exAccount  = AccountCondition()
+            val exAccount = AccountCondition()
             exAccount.userId = it[tAccount.USER_ID]
             exAccount.accountId = it[tAccount.ACCOUNT_ID]
             exAccount.loginName = it[tAccount.LOGIN_NAME]
