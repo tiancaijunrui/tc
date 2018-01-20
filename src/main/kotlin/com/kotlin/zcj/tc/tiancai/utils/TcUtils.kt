@@ -160,10 +160,7 @@ object TcUtils {
     }
 
     fun getSessionIdFromCookie(request: HttpServletRequest): String? {
-        val cookies: Array<Cookie>? = request.cookies
-        if (cookies == null) {
-            return null;
-        }
+        val cookies: Array<out Cookie> = request.cookies ?: return null
         for (cookie in cookies) {
             if (cookie.name == "tc_session_id") {
                 return cookie.value

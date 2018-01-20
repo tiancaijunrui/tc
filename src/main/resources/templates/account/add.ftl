@@ -105,7 +105,7 @@
         //常规轮播
         carousel.render({
             elem: '#test1'
-            , width: '100%' //设置容器宽度
+            , width: '100%'
             , arrow: 'always'
         });
         //监听提交

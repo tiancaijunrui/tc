@@ -2,6 +2,7 @@ package com.kotlin.zcj.tc.tiancai.serviceImpl
 
 import com.kotlin.zcj.tc.data.Tables.T_TC_CORP_CODE
 import com.kotlin.zcj.tc.data.tables.records.TTcCorpCodeRecord
+import com.kotlin.zcj.tc.tiancai.controller.CorpCodeTypeEnum
 import com.kotlin.zcj.tc.tiancai.service.CorpCodeService
 import com.kotlin.zcj.tc.tiancai.utils.TcExecutionContext
 import com.kotlin.zcj.tc.tiancai.utils.TcUtils
@@ -55,8 +56,8 @@ class CorpCodeServiceImpl : CorpCodeService {
     override fun listCorp(): MutableList<TTcCorpCodeRecord> {
         val corpCodeList: MutableList<TTcCorpCodeRecord>
         corpCodeList = dsl.selectFrom(T_TC_CORP_CODE).where(
-                ((T_TC_CORP_CODE.CREATE_BY.eq(TcExecutionContext.getUserId()).and(T_TC_CORP_CODE.TYPE.eq("PRIVATE")))
-                        .or(T_TC_CORP_CODE.TYPE.eq("PUBLIC")))
+                ((T_TC_CORP_CODE.CREATE_BY.eq(TcExecutionContext.getUserId()).and(T_TC_CORP_CODE.TYPE.eq(CorpCodeTypeEnum.PERSONAL.toString())))
+                        .or(T_TC_CORP_CODE.TYPE.eq(CorpCodeTypeEnum.PUBLIC.toString())))
         ).orderBy(T_TC_CORP_CODE.UPDATE_TIME.desc()).fetch()
         return corpCodeList;
     }

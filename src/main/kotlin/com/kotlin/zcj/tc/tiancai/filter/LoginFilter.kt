@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse
  * @Since2017/12/18 ZhaCongJie@HF
  */
 @Order(1)
-@WebFilter(filterName = "loginFilter", urlPatterns = arrayOf("/index/*","/ac/*"))
+@WebFilter(filterName = "loginFilter", urlPatterns = arrayOf("/index/*","/ac/*","/corp/*"))
 class LoginFilter : Filter {
     @Resource
     lateinit private var userService: UserService
