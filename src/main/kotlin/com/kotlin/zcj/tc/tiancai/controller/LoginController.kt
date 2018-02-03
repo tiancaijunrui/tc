@@ -33,7 +33,7 @@ class LoginController {
 
     @RequestMapping("/auth.html")
     @ResponseBody
-    fun toAuth(response: HttpServletResponse) {
+    fun toAuth(response: HttpServletResponse){
         val sParaTemp = mutableMapOf<String, String?>();
         sParaTemp.put("app_id", AlipayConfig.appId);
         sParaTemp.put("scope", TcConstants.scope);
