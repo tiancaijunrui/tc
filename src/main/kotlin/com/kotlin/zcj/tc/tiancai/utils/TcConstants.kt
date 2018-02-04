@@ -7,9 +7,11 @@ import java.net.URLEncoder.encode
  */
 object TcConstants {
     val target_service: String = "user.auth.quick.login";
-    val return_url : String = "http://127.0.0.1:8081/index/index.html";
+//    val return_url : String = "http://127.0.0.1:8081/index/index.html";
+    val return_url : String = "http://tc.junrui.online/index/index.html";
     val scope : String = "auth_user";
-    val redirect_uri : String = encode("http://127.0.0.1:8081/index/index.html");
+//    val redirect_uri : String = encode("http://127.0.0.1:8081/index/index.html");
+    val redirect_uri : String = encode("http://tc.junrui.online/index/index.html");
     val status_success = "Success";
     val pre_token = "TIANCAI";
 
