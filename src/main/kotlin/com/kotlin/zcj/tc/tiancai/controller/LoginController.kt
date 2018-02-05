@@ -27,7 +27,6 @@ class LoginController {
     @RequestMapping("/login.html")
     @ResponseBody
     fun toLogin(request: HttpServletRequest): ModelAndView {
-
         return ModelAndView("uc/login");
     }
 
@@ -49,7 +48,7 @@ class LoginController {
     @ResponseBody
     fun loginOut(request: HttpServletRequest, response: HttpServletResponse, @PathVariable("sessionId") sessionId: String) {
         stringRedis.delete(sessionId)
-        response.sendRedirect("/login/auth.html")
+        response.sendRedirect("/login/login.html")
         return;
     }
 }

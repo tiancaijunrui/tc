@@ -57,5 +57,6 @@ java -version
 ```aidl
 jar 放入到服务器中
 nohup java -jar tiancai-0.0.1-SNAPSHOT.jar > tc.log
+netstat –apn | grep 8080
 
 ```
